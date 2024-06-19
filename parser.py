@@ -19,8 +19,22 @@ label_names = {
     10: "X"
 }
 
+author_names = {
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X",
+    ID_HERE: "X"
+    }
+
 events_per_month_year = defaultdict(int)
 events_per_label = defaultdict(int)
+events_per_author = defaultdict(int)
 event_titles = []
 
 # Loads the TimeTree JSON file
@@ -62,6 +76,11 @@ def load_json_file():
             label_name = label_names[label_id]
             events_per_label[label_name] += 1
 
+        author_id = event.get('author_id')
+        if author_id in author_names:
+            author_name = author_names[author_id]
+            events_per_author[author_name] += 1
+
     plot_graphs()
 
 # Takes label and timestamp data and plots an ordered graph
@@ -73,6 +92,10 @@ def plot_graphs():
     sorted_months = sorted(events_per_month_year.items(), key=lambda x: x[1], reverse=True)
     months = [item[0] for item in sorted_months]
     counts_months = [item[1] for item in sorted_months]
+
+    sorted_authors = sorted(events_per_author.items(), key=lambda x: x[1], reverse=True)
+    authors = [item[0] for item in sorted_authors]
+    counts_authors = [item[1] for item in sorted_authors]
 
     plt.figure(figsize=(10, 5))
     plt.bar(labels, counts_labels, color='skyblue')
@@ -88,6 +111,15 @@ def plot_graphs():
     plt.xlabel('Month Year')
     plt.ylabel('Number of Events')
     plt.title('Number of Events per Month and Year')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(10, 5))
+    plt.bar(authors, counts_authors, color='skyblue')
+    plt.xlabel('authors')
+    plt.ylabel('Number of Events')
+    plt.title('Number of Events per author')
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
