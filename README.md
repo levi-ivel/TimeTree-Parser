@@ -23,6 +23,9 @@ Do the following to make the .json file
 - Save the file and start up "parser.py"
 - Cick on the "load json" button and select your .json file
 - You will now be prompted to enter label names, go to "event label management" in TimeTree and fill in the label names, top to bottom. Leave the text field empty if you don't have a name for that label
+
+![image](https://github.com/levi-ivel/TimeTreeParser/assets/142150222/89aeb6e9-5199-4a01-9b77-0c436389ad2b)
+
 - You will now be prompted to enter aurthor names, either search in the JSON what aurthor ID's make what events to find out who it is or put something random into the text field. Don't leave it empty
 - Done!
 
