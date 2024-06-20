@@ -1,5 +1,5 @@
 # TimeTree Parser
-A Tkinter program designed to take in a .json file of your calander and return 3 graphs showing what labels, months and users have the most evenets tied to them
+A Tkinter program designed to take in a .json file of your calander and return 3 graphs showing what labels, months and users have the most events tied to them
 
 # Setup
 Do the following to make the .json file
