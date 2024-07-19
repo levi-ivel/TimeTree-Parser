@@ -1,3 +1,6 @@
+# BOOO!!!!
+
+
 import json
 from collections import defaultdict
 from datetime import datetime
@@ -5,32 +8,21 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import filedialog
 
-# Set label ID's to names
+# Dictionaries of the names for the label and author ID's
 label_names = {
-    1: "X",
-    2: "X",
-    3: "X",
-    4: "X",
-    5: "X",
-    6: "X",
-    7: "X",
-    8: "X",
-    9: "X",
-    10: "X"
+    1: "",
+    2: "",
+    3: "",
+    4: "",
+    5: "",
+    6: "",
+    7: "",
+    8: "",
+    9: "",
+    10: ""
 }
 
-author_names = {
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X",
-    ID_HERE: "X"
-    }
+author_names = {}
 
 events_per_month_year = defaultdict(int)
 events_per_label = defaultdict(int)
@@ -55,8 +47,65 @@ def load_json_file():
         return
 
     events = data['events']
+    
+# Asks user to give names to the label ID's, filling the dictionary
+    ask_label_names(events)
 
-# Goes trough all events and extracts the label ID, title and date (month/year) from each event
+def ask_label_names(events):
+    label_window = tk.Toplevel(root)
+    label_window.title("Enter Label Names")
+
+    tk.Label(label_window, text="Enter names for labels:").pack(pady=10)
+
+    entry_vars = {}
+    for label_id in label_names.keys():
+        frame = tk.Frame(label_window)
+        frame.pack(pady=2)
+
+        tk.Label(frame, text=f"Label {label_id}:").pack(side=tk.LEFT)
+        entry_var = tk.StringVar()
+        entry_vars[label_id] = entry_var
+        entry = tk.Entry(frame, textvariable=entry_var)
+        entry.pack(side=tk.LEFT)
+
+    def save_labels():
+        for label_id, entry_var in entry_vars.items():
+            label_names[label_id] = entry_var.get()
+        label_window.destroy()
+        ask_author_names(events)
+
+    tk.Button(label_window, text="Save", command=save_labels).pack(pady=10)
+
+# Asks user to give names to the aurthor ID's, filling the dictionary
+def ask_author_names(events):
+    unique_author_ids = set(event['author_id'] for event in events if 'author_id' in event)
+
+    author_window = tk.Toplevel(root)
+    author_window.title("Enter Author Names")
+
+    tk.Label(author_window, text="Enter names for authors:").pack(pady=10)
+
+    entry_vars = {}
+    for author_id in unique_author_ids:
+        frame = tk.Frame(author_window)
+        frame.pack(pady=2)
+
+        tk.Label(frame, text=f"Author {author_id}:").pack(side=tk.LEFT)
+        entry_var = tk.StringVar()
+        entry_vars[author_id] = entry_var
+        entry = tk.Entry(frame, textvariable=entry_var)
+        entry.pack(side=tk.LEFT)
+
+    def save_authors():
+        for author_id, entry_var in entry_vars.items():
+            author_names[author_id] = entry_var.get()
+        author_window.destroy()
+        process_events(events)
+
+    tk.Button(author_window, text="Save", command=save_authors).pack(pady=10)
+
+# Get the event titles and the number of events per label, date (month/year) and user
+def process_events(events):
     for event in events:
         if not isinstance(event, dict):
             print(f"Error: Event data is not a dictionary: {event}")
@@ -71,6 +120,7 @@ def load_json_file():
             month_year = start_datetime.strftime('%B %Y')
             events_per_month_year[month_year] += 1
 
+# Converts the label and author ID's to names from the dictionary
         label_id = event.get('label_id')
         if label_id in label_names:
             label_name = label_names[label_id]
@@ -83,7 +133,7 @@ def load_json_file():
 
     plot_graphs()
 
-# Takes label and timestamp data and plots an ordered graph
+# Takes the result from process_events and plots three graphs showing which labels, months and users have the most events tied to them
 def plot_graphs():
     sorted_labels = sorted(events_per_label.items(), key=lambda x: x[1], reverse=True)
     labels = [item[0] for item in sorted_labels]
@@ -117,9 +167,9 @@ def plot_graphs():
 
     plt.figure(figsize=(10, 5))
     plt.bar(authors, counts_authors, color='skyblue')
-    plt.xlabel('authors')
+    plt.xlabel('Authors')
     plt.ylabel('Number of Events')
-    plt.title('Number of Events per author')
+    plt.title('Number of Events per Author')
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
